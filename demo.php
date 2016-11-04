@@ -50,7 +50,7 @@ echo "</tbody> </table>";
 
 function insertData($conn)
 {
-    $sql = "INSERT INTO demo (name_latin, name_utf8, name_utf8md4) VALUES ('100€', '200€', '300€'), ('😂 aiya',  '😂 haha',  '😂 good!')";
+    $sql = "INSERT INTO demo (name_latin, name_utf8, name_utf8md4) VALUES ('Loïck', 'Loïck', 'Loïck'), ('😂 aiya',  '😂 haha',  '😂 good!')";
     $conn->query($sql);
 }
 
