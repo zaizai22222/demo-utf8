@@ -14,45 +14,66 @@ if ($conn->connect_error) {
 $sql = "TRUNCATE demo";
 $result = $conn->query($sql);
 
-echo "No SET NAMES <br />";
-insertData($conn);
-printResult($conn);
+echo "
+<table border=\"1\">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Id</th>
+            <th>name_latin</th>
+            <th>name_utf8</th>
+            <th>name_utf8md4</th>
+        </tr>
+    </thead>
+    <tbody>
+";
 
-echo "SET NAMES 'utf8' <br />";
+
+//echo "No SET NAMES <br />";
+insertData($conn);
+printResult($conn, "No SET NAMES");
+
+//echo "SET NAMES 'utf8' <br />";
 $conn->query("SET NAMES 'utf8'");
 insertData($conn);
-printResult($conn);
+printResult($conn, "SET NAMES utf8", 2);
 
-echo "SET NAMES 'utf8mb4' <br />";
+//echo "SET NAMES 'utf8mb4' <br />";
 $conn->query("SET NAMES 'utf8mb4'");
 insertData($conn);
-printResult($conn);
+printResult($conn, "SET NAMES utf8mb4", 4);
 
 
 $conn->close();
 
+echo "</tbody> </table>";
 
 function insertData($conn)
 {
-    $sql = "INSERT INTO demo (name_latin, name_utf8, name_utf8md4) VALUES ('😂 aiya',  '😂 haha',  '😂 good!'), ('100€', '200€', '300€')";
+    $sql = "INSERT INTO demo (name_latin, name_utf8, name_utf8md4) VALUES ('100€', '200€', '300€'), ('😂 aiya',  '😂 haha',  '😂 good!')";
     $conn->query($sql);
 }
 
-function printResult($conn)
+function printResult($conn, $setNames, $offset = 0)
 {
-    $sql = "SELECT * FROM  `demo` order by id desc limit 2";
+    $sql = "SELECT * FROM  `demo` limit 2 offset " . $offset ;
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
+        echo "<tr>";
+
         // output data of each row
         while($row = $result->fetch_assoc()) {
-            echo "id: " . $row["id"]. " - Name latin: " . $row["name_latin"] . " - Name utf8: " . $row["name_utf8"] . " - Name utf8md4: " . $row["name_utf8md4"]  . "<br />";
+            echo "<td>" . $setNames . "</td>";
+            foreach ($row as $detail) {
+                echo "<td>" . $detail . "</td>";
+            }
+            echo "</tr>";
         }
+
     } else {
         echo "0 results";
     }
-
-    echo '<br />';
 }
 
 ?>
